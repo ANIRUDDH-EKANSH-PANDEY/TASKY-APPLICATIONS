@@ -1,0 +1,24 @@
+{
+  "name": "tasky_applications_serv",
+  "version": "1.0.0",
+  "description": "server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "Aniruddh": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ANIRUDDH-EKANSH-PANDEY/TASKY-APPLICATIONS.git"
+  },
+  "author": "aniruddh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ANIRUDDH-EKANSH-PANDEY/TASKY-APPLICATIONS/issues"
+  },
+  "homepage": "https://github.com/ANIRUDDH-EKANSH-PANDEY/TASKY-APPLICATIONS#readme",
+  "dependencies": {
+    "nodemon": "^3.1.2"
+  }
+}
