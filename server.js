@@ -1,97 +1,44 @@
-const http = require("http");
+const express = require("express");
 
- const port = 8081; //local port num
+const app = express();
+app.use(express.json());
 
-//  HTTP Methods
-
-/*
-
->>GET: In order to get data from the server.
->>POST: In order to send/transfer data to the server.
->>DELETE: In order to delete data from the database.
->>PATCH: In order to update certain fields. (Minimal Updates)
->>PUT: In order to update certain fields. (Full Update)
-
-*/
+const port = 8081; 
 
 const toDoList = ["learn", "apply things", "succeed"];
 
+// http://localhost:8081/todos
 
-http.createServer((req, res)=>{ //callback function
-    const {method, url} = req;
-    // console.log(method, url);
-    if(url === "/todos"){
-    if(method === "GET"){
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(toDoList.toString());
-    }
-    else if(method === "POST"){
-        let body = "";
-        req.on('error',()=>{
-            console.log(err);
-        }).on('data',(chunk)=>{
-            body +=chunk;
-            // console.log(chunk);
-        }).on('end', ()=>{
-            body = JSON.parse(body);
+app.get("/todos", (req,res)=>{
 
-            let newToDo = toDoList;
-            newToDo.push(body.Item)
-            console.log(newToDo);
-            // console.log("data: ", body);
-        })
-    }
-    else if(method === "DELETE"){
-        let body = '';
-        req.on('error', (err) => {
-            console.log(err);
-        }).on("data", (chunk) => {
-            body += chunk;
-        })
-        .on("end", () => {
-            body = JSON.parse(body);
+    // res.writeHead(200);
+    // res.write(toDoList);
+    res.status(200).send(toDoList)
+});
 
-            let deleteThisItem = body.Item;
-            for(let i = 0; i < toDoList.length; i++){
-                if(toDoList[i] === deleteThisItem){
-                    toDoList.splice(i,1);
-                    break;
-                }
-                else{
-                    console.log("Error : Match not found!");
-                    break;
-                }
-            }
+app.post("/todos", (req,res)=>{
 
-            // toDoList.find((elem, index)=>{
-            //     if(elem === deleteThisItem){
-            //          toDoList.splice(index,1);
-            //     }
-            //     else{
-            //         console.log("Error : Match not found!");
-            //     }
-            // });
-        });
-    }
-     }
-    else{
-        res.writeHead(404);
-    }
-   
-   res.end();
-    // res.writeHead(200, { "Content-Type": "text/html" });
-    // res.write("<h2>Hey server started and you can proceed :-) 123456 </h2>");
-    // res.end();
-})
-.listen(port, ()=>{ //callback function
-     console.log(`NodeJS Server started running on Port ${port}`);
-})
+    let newToDoItem = req.body.name;
+    toDoList.push(newToDoItem);
+    res.status(201).send({message : "Task Added Successfully"})
+});
 
-//http://localhost:8081 , http://localhost:8081/ (These both are same)
-//http://localhost:8081/SignIn
-//http://localhost:8081/SignUp
-//http://localhost:8081/Home
-//http://localhost:8081/ContactUs
-//http://localhost:8081/AboutUs
+app.delete("/todos", (req,res)=>{
 
-// All these SignIn, SignUp, Home, ContactUs, AboutUs, etc. are "Routes/Routers".
+    let deleteThisItem = req.body.name;
+    toDoList.find((elem,index)=>{
+        if(elem === deleteThisItem){
+            toDoList.splice(index, 1);
+        }
+        res.status(202).send({message : `Deleted Item ${req.body.name}`});
+    });
+    });
+
+    // Any other route will be handled here
+    app.all("*", (req, res) => {
+        res.status(501).send();
+    });
+
+    app.listen(port, ()=>{
+    console.log(`NodeJs server started running on port ${port}`)
+});
